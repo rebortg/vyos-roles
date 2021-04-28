@@ -1,0 +1,54 @@
+---
+node_exporter_path: "/config/user-data/"
+
+## The version of the node exporter to download and install. A full list of versions can be found at the following URL:
+## https://github.com/prometheus/node_exporter/releases
+node_exporter_version: "1.0.1"
+
+## The architecture that the node exporter supports. The exporter is built for a series of architectures; see the above
+## releases link for further details
+node_exporter_arch: "amd64"
+
+## The checksum algorithm to check the release against. See the following URL for a list of options:
+## http://docs.ansible.com/ansible/stat_module.html
+node_exporter_checksum_algorithm: "sha256"
+
+## There are two checksums that matter: The archive, and the binary. The binary is the executable node exporter,
+## the archive the thing it's downloaded with.
+node_exporter_checksum_binary: "71bf890eb1a1ffd402d9351ab1201ae7cb2490085443d6f6c6c42b6aba53db16"
+
+## See above
+node_exporter_checksum_archive: "3369b76cd2b0ba678b6d618deab320e565c3d93ccb5c2a0d5db51a53857768ae"
+
+## These are the default exporters that are enabled as of v0.14.0. To get a list of the available exporters, run
+##
+##     $ path/to/node_exporter -collectors.print
+##
+node_exporter_exporters:
+  - "filesystem"
+  - "stat"
+  - "diskstats"
+  - "edac"
+  - "infiniband"
+  - "meminfo"
+  - "netdev"
+  - "textfile"
+  - "entropy"
+  - "filefd"
+  - "sockstat"
+  - "time"
+  - "uname"
+  - "vmstat"
+  - "zfs"
+  - "conntrack"
+  - "loadavg"
+  - "netstat"
+  - "wifi"
+  - "hwmon"
+
+## Prometheus supports exporting metrics for things like cronjobs to a specific location on disk, where the node
+## exporter will later pick them up. The path below is the the location the metrics are expected to appear, in the
+## prometheus format.
+##
+## It is created with liberal permissions, so any process can export metrics to it.
+node_exporter_textfile_directory: "/var/metrics/prometheus"

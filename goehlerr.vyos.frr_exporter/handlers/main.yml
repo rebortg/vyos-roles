@@ -1,0 +1,8 @@
+
+---
+- name: "restart frr_exporter"
+  systemd:
+    state: "restarted"
+    name: "frr_exporter"
+    enabled: "yes"
+    daemon_reload: "yes"

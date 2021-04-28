@@ -1,0 +1,16 @@
+[Unit]
+Description=The FRR exporter
+Documentation=https://github.com/tynany/frr_exporter
+
+[Service]
+# Try to always ensure this service is running. It's how we health check other services remotely.
+Restart=always
+
+# Start the service, bound to localhost. It will be exposed by another service, such as NGINX or stunnel.
+ExecStart={{ frr_exporter_path }}frr_exporter \
+    --web.listen-address={{ ansible_host }}:9200 \
+
+[Install]
+
+# Boot it after the network is up and running
+WantedBy=network-online.target

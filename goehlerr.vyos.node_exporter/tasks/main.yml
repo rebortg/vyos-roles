@@ -1,0 +1,6 @@
+---
+# tasks file for goehlerr.vyos.node_exporter
+
+#- include: configuration.yml
+- include: install.yml
+- include: systemd.yml

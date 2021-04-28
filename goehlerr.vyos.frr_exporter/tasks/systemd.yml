@@ -1,0 +1,14 @@
+---
+- name: "Create the systemd service"
+  template:
+    src: "frr_exporter.service.j2"
+    dest: "/etc/systemd/system/frr_exporter.service"
+    owner: "root"
+    mode: "u=rwx,g=r,o=r"
+  notify: "restart frr_exporter"
+
+- name: "Make sure frr exporter service is running and auto-starting"
+  service:
+    name: "frr_exporter"
+    state: "started"
+    enabled: "yes"

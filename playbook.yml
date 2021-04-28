@@ -1,0 +1,16 @@
+- hosts: all
+  gather_facts: False
+  become: True
+
+  roles:
+    - goehlerr.vyos.frr_exporter
+    - goehlerr.vyos.node_exporter
+
+ 
+  vars:
+    # deactivate network_cli b/c copy not work
+    #ansible_connection: network_cli
+    ansible_network_os: vyos
+    ansible_user: vyos
+
+

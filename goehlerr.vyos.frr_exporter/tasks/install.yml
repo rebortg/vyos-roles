@@ -1,0 +1,46 @@
+---
+
+- name: "Check whether the frr exporter has already been installed"
+  stat:
+    path: "{{ frr_exporter_path }}frr_exporter"
+    checksum_algorithm: "{{ frr_exporter_checksum_algorithm }}"
+  register: "bin"
+
+- name: "Fetch the archive from GitHub"
+  get_url:
+    url: "https://github.com/tynany/frr_exporter/releases/download/v{{ frr_exporter_version }}/frr_exporter-{{ frr_exporter_version }}.linux-{{ frr_exporter_arch }}.tar.gz"
+    dest: "/tmp/frr_exporter-{{ frr_exporter_version }}.linux-{{ frr_exporter_arch }}.tar.gz"
+    checksum: "{{ frr_exporter_checksum_algorithm }}:{{ frr_exporter_checksum_archive }}"
+  when: bin.stat.exists == False or
+        bin.stat.checksum != frr_exporter_checksum_binary
+
+- name: "Unpack the archive in /tmp"
+  unarchive:
+    remote_src: true
+    src: "/tmp/frr_exporter-{{ frr_exporter_version }}.linux-{{ frr_exporter_arch }}.tar.gz"
+    dest: "/tmp"
+  when: bin.stat.exists == False or
+        bin.stat.checksum != frr_exporter_checksum_binary
+
+- name: "Move frr-exporter to the {{ frr_exporter_path }}frr_exporter"
+  copy:
+    remote_src: true
+    src: "/tmp/frr_exporter-{{ frr_exporter_version }}.linux-{{ frr_exporter_arch }}/frr_exporter"
+    dest: "{{ frr_exporter_path }}frr_exporter"
+    owner: "root"
+    group: "root"
+    mode: "u=rwx,g=rwx,o=rwx"
+  when: bin.stat.exists == False or
+        bin.stat.checksum != frr_exporter_checksum_binary
+  notify: "restart frr_exporter"
+
+
+- name: "Clean the /tmp/ dir up"
+  file:
+    path: "{{ item }}"
+    state: "absent"
+  with_items:
+    - "/tmp/frr_exporter-{{ frr_exporter_version }}.linux-{{ frr_exporter_arch }}.tar.gz"
+    - "/tmp/frr_exporter-{{ frr_exporter_version }}.linux-{{ frr_exporter_arch }}/"
+  when: bin.stat.exists == False or
+        bin.stat.checksum != frr_exporter_checksum_binary
